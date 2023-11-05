@@ -6,9 +6,16 @@
   "version": "1.0.0",
   "description": "Server portion of game, where primary state of game will reside. ",
   "main": "server.js",
-  "devDependencies": {},
+  "devDependencies": {
+    "@types/jest": "^29.5.7",
+    "@types/supertest": "^2.0.15",
+    "jest": "^29.7.0",
+    "supertest": "^6.3.3",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
+  },
   "scripts": {
-    "test": "test"
+    "test": "NODE_OPTIONS=--experimental-vm-modules npx jest --detectOpenHandles"
   },
   "repository": {
     "type": "git",
