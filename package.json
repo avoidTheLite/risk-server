@@ -6,7 +6,6 @@
   "version": "1.0.0",
   "description": "Server portion of game, where primary state of game will reside. ",
   "main": "server.js",
-  "devDependencies": {},
   "scripts": {
     "test": "test"
   },
