@@ -39,4 +39,13 @@ async function CommandController() {
     // async function UndoController() {
         
     // }
+    return {
+        DeployTroopsController,
+        AttackController,
+        // MoveController,
+        // RewardController,
+        // UndoController
+    }
 }
+
+export default CommandController
