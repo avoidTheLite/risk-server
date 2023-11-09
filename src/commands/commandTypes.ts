@@ -1,4 +1,4 @@
-import { Country } from "./types";
+import { Country } from "../controllers/lib/types";
 
 export interface Command {
     

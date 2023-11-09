@@ -1,4 +1,4 @@
-import {Player, Globe, Country, GameState} from './types'
+import {Player, Globe, Country, GameState} from '../../controllers/lib/types'
 
 
 //examples for now
@@ -16,9 +16,9 @@ var example_players:Player[] = [
 ];
 
 var example_country:Country[] = [{
-    name: "country1",    continent: undefined,    connectedTo: undefined, armies : 0,
+    name: "argentina",    continent: undefined,    connectedTo: undefined, armies : 5,
 },
-{   name: "country2",    continent: undefined,    connectedTo: undefined, armies : 0,
+{   name: "brazil",    continent: undefined,    connectedTo: undefined, armies : 5,
 }];
 
 var example_globe:Globe = {
@@ -36,8 +36,9 @@ async function get(): Promise<GameState> {
         players: example_players,
         country: example_country,
         globe: example_globe,
+        phase: "start",
         turn: 0,
-        activePlayer: 0,
+        activePlayerId: 1,
     }
     return data
 

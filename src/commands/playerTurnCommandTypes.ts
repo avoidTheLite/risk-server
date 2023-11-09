@@ -1,12 +1,12 @@
 
 export interface Commands {
-    
+    available: boolean;
 
 }
 
 export interface DeployPhaseCommands extends Commands {
     cardMatch: string;
-    assignReinforcements: { country: string, number: number };
+    deployTroops: { country: string, number: number };
 
 }
 
@@ -18,6 +18,5 @@ export interface attackerCommands extends Commands {
 
 export interface defenderCommands extends Commands {
     defend: { defendingCountry: string, numberOfArmies: number };
-    taunt: string;
 }
 

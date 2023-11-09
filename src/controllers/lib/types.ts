@@ -33,11 +33,24 @@ export interface GameState {
     players: Player[],
     country: Country[],
     globe: Globe,
-    turn: Number
-    activePlayer: number
+    turn: Number,
+    phase: phase
+    activePlayerId: number
 }
+
+export type phase = "deploy" | "attack" | "move" | "end" | "start" | "gameStart"
 
 export interface combatResult {
     attackersLost: number;
     defendersLost: number;
+}
+
+export interface Engagement {
+    attackingCountry: string;
+    defendingCountry: string;
+    troopCount: number;
+    attackersLost?: number;
+    defendersLost?: number;
+    attackerRolls?: number[];
+    defenderRolls?: number[];
 }
