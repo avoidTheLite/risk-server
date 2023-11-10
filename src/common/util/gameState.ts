@@ -1,12 +1,14 @@
 import {Player, Globe, Country, GameState} from '../../controllers/lib/types'
+import { countrySeed } from '../../models/seedData';
+
 
 
 //examples for now
 var example_players:Player[] = [
     {name: "steve",
     id: 0,
-    countriesOccupied: undefined,
-    continentsControlled: undefined,
+    countriesOccupied: [],
+    continentsControlled: [],
     armies: 0,},
     {name: "bob",
     id: 1,
@@ -15,11 +17,7 @@ var example_players:Player[] = [
     armies: 0},
 ];
 
-var example_country:Country[] = [{
-    name: "argentina",    continent: undefined,    connectedTo: undefined, armies : 5,
-},
-{   name: "brazil",    continent: undefined,    connectedTo: undefined, armies : 5,
-}];
+var example_country:Country[] = countrySeed();
 
 var example_globe:Globe = {
     name: "globe1",
@@ -31,6 +29,21 @@ var example_globe:Globe = {
 };
 
 function GameStateController() {
+async function initialize(): Promise<GameState> {
+    const data: GameState = {
+        players: example_players,
+        country: example_country,
+        globe: example_globe,
+        phase: "start",
+        turn: 0,
+        activePlayerId: 1,
+    }
+    return data
+
+
+
+}
+
 async function get(): Promise<GameState> {
     const data: GameState = {
         players: example_players,
@@ -49,6 +62,7 @@ async function update(currentState: GameState): Promise<GameState> {
     return data
 }
 return  {
+    initialize,
     get,
     update
     }

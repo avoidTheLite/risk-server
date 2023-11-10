@@ -17,10 +17,11 @@ export interface Globe {
 }
 
 export interface Country {
-    name: string;
-    continent?: Continent;
-    connectedTo?: Country[];
-    armies: number;
+    name?: string;
+    id: string;
+    continent?: string;
+    connectedTo?: string[];
+    armies?: number;
 }
 
 export interface Continent {
