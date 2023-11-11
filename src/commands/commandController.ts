@@ -1,12 +1,12 @@
 import {Request, Response, NextFunction} from 'express'
-import { Player, Globe, Country, combatResult} from '../controllers/lib/types'
+import { Player, Globe, Country, combatResult} from '../common/types'
 import { DeployTroops, Attack, Move, Reward,} from './commandTypes'
-import { GameState} from '../controllers/lib/types'
-import GameStateController from '../common/util/gameState'
-import combat from '../controllers/lib/combat'
-import { Engagement } from '../controllers/lib/types'
-import availableCommands from './availableCommands'
-import turnStart from '../controllers/lib/startPhaseController'
+import { GameState} from '../common/types'
+import GameStateController from '../game/gameState'
+import combat from '../game/services/combat'
+import { Engagement } from '../common/types'
+import availableCommands from './services/availableCommands'
+import turnStart from '../game/services/startPhaseController'
 
 
 

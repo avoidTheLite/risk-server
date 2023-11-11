@@ -2,7 +2,7 @@ import * as dotenv from 'dotenv';
 import appConfig from './common/util/appconfig';
 
 dotenv.config();
-dotenv.config({ path: '../.env' });
+// dotenv.config({ path: '../.env' });
 
 const config = appConfig({
   env: {
@@ -25,14 +25,16 @@ const config = appConfig({
     env: 'DB_PORT',
   },
   dbUsername: {
+    default: 'postgres',
     env: 'DB_USER',
   },
   dbPassword: {
+    default: 'password',
     env: 'DB_PASSWORD',
   },
   dbName: {
     env: 'DB_NAME',
-    default: 'oppity',
+    default: 'risk-server',
   },
 });
 

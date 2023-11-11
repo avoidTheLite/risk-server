@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import bodyParser from "body-parser";
 import CommandController from './commandController'
-import { Engagement } from '../controllers/lib/types'
+import { Engagement } from '../common/types'
 
 
 const router = Router();

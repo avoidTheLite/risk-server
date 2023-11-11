@@ -1,5 +1,5 @@
-import {Player, Globe, Country, GameState} from '../../controllers/lib/types'
-import { countrySeed } from '../../models/seedData';
+import {Player, Globe, Country, GameState} from '../common/types'
+import { countrySeed } from '../db/seeds/models/seedData';
 
 
 

@@ -1,4 +1,4 @@
-import { Country } from "../controllers/lib/types";
+import { Country } from "../../../common/types";
 export function countrySeed():Country[] {
     return[
     {

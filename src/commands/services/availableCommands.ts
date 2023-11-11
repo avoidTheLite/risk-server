@@ -1,6 +1,6 @@
 
 
-import { DeployPhaseCommands, attackerCommands, defenderCommands } from "./playerTurnCommandTypes";
+import { DeployPhaseCommands, attackerCommands, defenderCommands } from "../playerTurnCommandTypes";
 
 
 

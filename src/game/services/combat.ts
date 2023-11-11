@@ -1,4 +1,4 @@
-import { combatResult } from "./types";
+import { combatResult } from "../../common/types";
 
 
 function rollNSided(sides: number): number {
