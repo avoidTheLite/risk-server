@@ -1,22 +1,21 @@
 # Risk-server
 Server side risk client
 
+## Getting Started
+### Running the application
+1. Run `npm install`
+2. Run `npm run dev`
 
-PORT 9000
+### First Time Install
+1. Run `npm install`
+2. Copy `example.env` to `.env`
+3. Update the values in `.env`
+4. Start the database: `npm run docker:db`
+5. Run migrations: `npm run db:migrate`
+6. Seed the database: `npm run db:seed`
+7. Start the application: `npm run dev`
 
----
-Find and Replace:
+```bash
+knex migrate:make <migration-name> -x ts --knexfile src/knexfile.ts
+```
 
-controllerFunction1
-controllerFunction2
-controllerFunction3
-
-getroute1
-getroute2
-postroute1
-
-API_KEY
-API_URL
-
-OPEN_AI_API_KEY
-OPEN_AI_API_URL

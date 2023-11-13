@@ -8,7 +8,8 @@ const gameRouter = Router();
 const controller = game();
 gameRouter.use(bodyParser.json())
 
-// router.get('/game', controller.get);
+gameRouter.get('/:id', controller.get);
+gameRouter.get('/', controller.list);
 gameRouter.post('/new', controller.newGame);
 // router.post('game/end', controller.end);
 

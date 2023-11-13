@@ -2,7 +2,7 @@ import * as dotenv from 'dotenv';
 import appConfig from './common/util/appconfig';
 
 dotenv.config();
-// dotenv.config({ path: '../.env' });
+dotenv.config({ path: '../.env' });
 
 const config = appConfig({
   env: {
@@ -18,6 +18,7 @@ const config = appConfig({
     env: 'LOG_LEVEL',
   },
   dbHost: {
+    default: 'localhost',
     env: 'DB_URL',
   },
   dbPort: {

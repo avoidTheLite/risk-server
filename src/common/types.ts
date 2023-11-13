@@ -24,6 +24,15 @@ export interface Country {
     armies?: number;
 }
 
+export interface CountryRecord {
+    name?: string;
+    id: string;
+    continent?: string;
+    connectedTo?: string;
+    armies?: number;
+
+}
+
 export interface Continent {
     name: string;
     countries?: Country[];
@@ -33,10 +42,23 @@ export interface Continent {
 export interface GameState {
     players: Player[],
     country: Country[],
-    globe: Globe,
+    globe?: Globe,
     turn: Number,
-    phase: phase
-    activePlayerId: number
+    phase: phase,
+    activePlayerId: number,
+    id: string
+    created_at?: string,
+    updated_at?: string
+}
+
+export interface GameStateRecord {
+    id: string;
+    turn: Number;
+    phase: phase;
+    activePlayerId: number;
+    created_at?: string,
+    updated_at?: string,
+    died_at?: string
 }
 
 export type phase = "deploy" | "attack" | "move" | "end" | "start" | "gameStart"
@@ -55,3 +77,37 @@ export interface Engagement {
     attackerRolls?: number[];
     defenderRolls?: number[];
 }
+
+interface Logger {
+    debug: Function;
+    error: Function;
+    info: Function;
+    warn: Function;
+}
+
+export interface LogRequest extends Request {
+    log: Logger;
+}
+export enum LOG_LEVELS {
+    ERROR = 'error',
+    WARN = 'warn',
+    INFO = 'info',
+    DEBUG = 'debug',
+}
+  
+export type LogLevel = 'error' | 'warn' | 'info' | 'debug';
+
+export interface LoggerOptions {
+    logLevel: any;
+    doc: string;
+}
+
+export enum HttpCode {
+    OK = 200,
+    CREATED = 201,
+    NO_CONTENT = 204,
+    BAD_REQUEST = 400,
+    UNAUTHORIZED = 401,
+    NOT_FOUND = 404,
+    INTERNAL_SERVER_ERROR = 500,
+  }

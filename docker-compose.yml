@@ -3,10 +3,11 @@ services:
   postgres:
     image: 'postgres:15.4'
     ports:
-      - 5433:5433
+      - ${DB_PORT}:5432
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=risk-server
-volumes:
-  redis_data:
+    env_file:
+      - .env
+      

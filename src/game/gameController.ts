@@ -5,17 +5,34 @@ function game() {
     async function newGame(
         req: Request,
         res: Response,
-        next: NextFunction
     ) {
-        const players = req.body.players;
-        const data = await GameStateController().initialize;
-
-       
+        console.log('new game - initializing.')
+        const data = await GameStateController().initialize();
+        res.send(data)
+        return data
+    }
+    async function get(
+        req: Request,
+        res: Response,
+    ){
+        console.log('get game - getting game state.')
+        let data = await GameStateController().get(req.params.id);
+        res.send(data)
+        return data
+    }
+    async function list(
+        req: Request,
+        res: Response,
+    ){
+        console.log('list game - getting game state.')
+        let data = await GameStateController().list();
         res.send(data)
         return data
     }
     return {
-        newGame
+        newGame,
+        get,
+        list
     }
 }
 
