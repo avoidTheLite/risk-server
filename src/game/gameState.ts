@@ -55,9 +55,9 @@ function GameStateController() {
 
     }
     async function get(gameID: string): Promise<GameStateRecord> {
-        let data: GameState = {
+        let data: GameStateRecord = {
             players: await db("players"),
-            country: example_country,
+            country: await db("countriesBase"),
             // globe: example_globe,
             phase: "start",
             turn: 0,
@@ -116,8 +116,8 @@ function GameStateController() {
         //     })
         return data
     }
-    async function update(currentState: GameState): Promise<GameState> {
-        var data: GameState = currentState;
+    async function update(currentState: GameStateRecord): Promise<GameStateRecord> {
+        var data: GameStateRecord = currentState;
         let gameID = "42"
         
         return data

@@ -7,7 +7,7 @@ function game() {
         res: Response,
     ) {
         console.log('new game - initializing.')
-        const data = await GameStateController().initialize();
+        let data = await GameStateController().initialize();
         res.send(data)
         return data
     }

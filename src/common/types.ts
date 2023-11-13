@@ -58,7 +58,9 @@ export interface GameStateRecord {
     activePlayerId: number;
     created_at?: string,
     updated_at?: string,
-    died_at?: string
+    died_at?: string,
+    players?: Player[],
+    country?: Country[],
 }
 
 export type phase = "deploy" | "attack" | "move" | "end" | "start" | "gameStart"

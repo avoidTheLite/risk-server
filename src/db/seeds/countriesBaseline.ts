@@ -10,6 +10,7 @@ export async function seed(knex: Knex): Promise<void> {
     let countriesTable: CountryRecord[] = countries.map(country => ({
         id: country.id, 
         name: country.name, 
+        armies: 0,
         continent: country.continent, 
         connectedTo: JSON.stringify(country.connectedTo)} ));
   await knex("countriesBase").insert(countriesTable);

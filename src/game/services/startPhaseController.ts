@@ -3,14 +3,14 @@
 //shuffle deck / deal shuffled deck
 //load map
 
-import { phase } from "../../common/types"
+import { GameStateRecord, phase } from "../../common/types"
 import { GameState} from '../../common/types'
 import GameStateController from '../gameState'
 
 
 
-async function turnStart() {
-    const currentState: GameState = await GameStateController().get();
+async function turnStart(gameID: string) {
+    const currentState: GameStateRecord = await GameStateController().get(gameID);
     const activePlayer: number = currentState.activePlayerId
     currentState.players[activePlayer].armies += 5;
     
