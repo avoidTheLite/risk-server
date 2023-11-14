@@ -12,7 +12,6 @@ export interface Globe {
     id: string;
     continents: Continent[];
     playerMax: Number;
-    owner?: Player;
     countries: Country[];
 }
 
@@ -21,6 +20,7 @@ export interface Country {
     id: string;
     continent?: string;
     connectedTo?: string[];
+    ownerID?: number;
     armies?: number;
 }
 
@@ -31,6 +31,11 @@ export interface CountryRecord {
     connectedTo?: string;
     armies?: number;
 
+}
+
+export interface CountryOwnershipRecord {
+    country_id: string;
+    player_id: number;
 }
 
 export interface Continent {

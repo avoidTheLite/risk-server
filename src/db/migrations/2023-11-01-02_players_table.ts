@@ -3,6 +3,8 @@ import { Knex } from "knex";
 export async function up(knex: Knex): Promise<void> {
   return knex.schema.createTable("players", (table) => {
     table.increments("id").primary();
+    table.string("gameID");
+    table.integer("armies");
     table.string("name");
     table.string("color");
     table.timestamps(true, true);

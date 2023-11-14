@@ -6,7 +6,7 @@ import GameStateController from '../game/gameState'
 import combat from '../game/services/combat'
 import { Engagement } from '../common/types'
 import availableCommands from './services/availableCommands'
-import turnStart from '../game/services/startPhaseController'
+import turnStart from '../game/services/startTurn'
 
 
 
@@ -23,9 +23,7 @@ function CommandController() {
         let currentState: GameStateRecord = await GameStateController().get(req.body.gameID);
         const activePlayer: number = currentState.activePlayerId;
         let targetCountry: number = req.body.targetCountry;
-        // if (currentState.country[targetCountry]) {
         currentState.country[targetCountry-1].armies += req.body.troopCount;
-        // }
         if (currentState.players) {
         currentState.players[activePlayer].armies -= req.body.troopCount;
         }

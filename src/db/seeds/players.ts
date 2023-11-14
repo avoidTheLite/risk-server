@@ -9,22 +9,30 @@ export async function seed(knex: Knex): Promise<void> {
       id: "1",
       name: "Justin",
       color: "red",
+      armies: 0,
+      gameID: "42"
 
     },
     {
       id: "2",
       name: "Ernie",
       color: "black",
+      armies: 0,
+      gameID: "42"
     },
     {
         id: "3",
         name: "Joan",
         color: "blue",
+        armies: 0,
+        gameID: "42"
     },
     {
         id: "4",
         name: "Diane",
         color: "yellow",
+        armies: 0,
+        gameID: "42"
     }
   ]);
 }

@@ -1,5 +1,6 @@
 import GameStateController from "./gameState";
 import { NextFunction, Request, Response } from 'express';
+import gameStart from "./services/startGame";
 
 function game() {
     async function newGame(
@@ -8,6 +9,7 @@ function game() {
     ) {
         console.log('new game - initializing.')
         let data = await GameStateController().initialize();
+        await gameStart(data.id);
         res.send(data)
         return data
     }
@@ -17,6 +19,15 @@ function game() {
     ){
         console.log('get game - getting game state.')
         let data = await GameStateController().get(req.params.id);
+        res.send(data)
+        return data
+    }
+    async function getCountries(
+        req: Request,
+        res: Response,
+    ){
+        console.log('get game - getting game state.')
+        let data = await GameStateController().getCountries();
         res.send(data)
         return data
     }
@@ -32,6 +43,7 @@ function game() {
     return {
         newGame,
         get,
+        getCountries,
         list
     }
 }

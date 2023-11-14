@@ -1,12 +1,12 @@
 import { Knex } from 'knex';
-import { Logger } from '../../util/riskLogger';
+import RiskLogger from '../../util/riskLogger';
 
 export {};
 
 declare global {
   namespace Express {
     export interface Request {
-      log: OppityLogger;
+      log: RiskLogger;
       db: Knex;
     }
   }

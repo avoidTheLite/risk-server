@@ -1,6 +1,6 @@
 import app from './app';
 import config from './config';
-import turnStart from './game/services/startPhaseController';
+import turnStart from './game/services/startTurn';
 
 const PORT = config.get('serverPort');
 
