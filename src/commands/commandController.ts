@@ -7,6 +7,7 @@ import combat from '../game/services/combat'
 import { Engagement } from '../common/types'
 import availableCommands from './services/availableCommands'
 import turnStart from '../game/services/startTurn'
+import { NoTroopError, AttackError } from '../common/types/errors'
 
 
 
@@ -25,9 +26,9 @@ function CommandController() {
         let targetCountry: number = req.body.targetCountry;
         currentState.country[targetCountry-1].armies += req.body.troopCount;
         if (currentState.players) {
-        currentState.players[activePlayer].armies -= req.body.troopCount;
+        currentState.players[activePlayer-1].armies -= req.body.troopCount;
         }
-        if (currentState.players[activePlayer].armies == 0) {
+        if (currentState.players[activePlayer-1].armies == 0) {
             currentState.phase = 'attack';
         }
         await GameStateController().update(currentState);
@@ -38,26 +39,46 @@ function CommandController() {
     async function attack(req: Request, res: Response) {
         //Read state and get the attacking country, defending country, and troop count
         let currentState: GameStateRecord = await GameStateController().get(req.body.gameID);
-        const attackingCountry: string = req.body.attackingCountry;
-        const defendingCountry: string = req.body.defendingCountry;
+        const activePlayer: number = currentState.activePlayerId;
+        const attackingCountryID: number = req.body.attackingCountry;
+        const defendingCountryID: number = req.body.defendingCountry;
         const troopCount: number = req.body.troopCount;
         
         
         //Check how many armies are attacking/defending within the engagement
-        let attackTroopsAvailable: number = currentState.country.find(value => value.name === attackingCountry).armies-1;
-        let defenderTroopsAvailable: number = currentState.country.find(value => value.name === defendingCountry).armies;
-        let attackingArmies: number = Math.min(troopCount, 3, defenderTroopsAvailable);
+        let combatInput = {
+            attackingArmies: 0,
+            defendingArmies: 0
+        };
+        try {
+        var attackTroopsAvailable: number = currentState.country[attackingCountryID-1].armies-1;
+        if (attackTroopsAvailable<=0) {
+            throw new NoTroopError('no troops available to attack')
+        }
+        var defenderTroopsAvailable: number = currentState.country[defendingCountryID-1].armies;
+        if (defenderTroopsAvailable<=0) {
+            throw new NoTroopError('no troops available to defend')
+        }
+        combatInput.attackingArmies= Math.min(troopCount, 3, attackTroopsAvailable);
         console.log("Defenders available - " + defenderTroopsAvailable);
         console.log("Attackers available - " + attackTroopsAvailable);
-        let defendingArmies: number = Math.min(2, attackTroopsAvailable);
-        const combatResult:combatResult =  await combat(attackingArmies, defendingArmies);
-        console.log('attacking with ' + attackingArmies + ' armies')
-        console.log('defending with ' + defendingArmies + ' armies')
+        combatInput.defendingArmies= Math.min(2, defenderTroopsAvailable);
+        console.log('attacking with ' + combatInput.attackingArmies + ' armies')
+        console.log('defending with ' + combatInput.defendingArmies + ' armies')
+        
+        }
+        catch (err:any){
+            if (err.name === 'NoTroopError') {
+            req.log.info("no troops for country", {combatInput})
+            } else {return err
+        }}
+        
+        const combatResult:combatResult =  await combat(combatInput.attackingArmies, combatInput.defendingArmies);
         console.log(combatResult)
 
         //Save the state, then update it
-        currentState.country.find(value => value.name === attackingCountry).armies -= combatResult.attackersLost;
-        currentState.country.find(value => value.name === defendingCountry).armies -= combatResult.defendersLost;
+        currentState.country[attackingCountryID-1].armies -= combatResult.attackersLost;
+        currentState.country[defendingCountryID-1].armies -= combatResult.defendersLost;
         await GameStateController().update(currentState);
         res.send(combatResult);
 

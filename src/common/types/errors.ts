@@ -61,3 +61,31 @@ export class NotFoundError extends Error {
     this.isOperational = true;
   }
 }
+
+export class NoTroopError extends Error {
+  name: string;
+  
+  constructor(args: string) {
+    super(args);
+
+    Object.setPrototypeOf(this, new.target.prototype);
+
+    this.name = args || 'NoTroopError';
+  }
+}
+
+export class AttackError extends Error {
+  name: string;
+  httpCode: HttpCode;
+  isOperational: boolean = true;
+
+  constructor(args: AppErrorArgs) {
+    super(args.message);
+
+    Object.setPrototypeOf(this, new.target.prototype);
+
+    this.name = 'AttackError';
+    this.httpCode = HttpCode.BAD_REQUEST;
+    this.isOperational = true;
+  }
+}

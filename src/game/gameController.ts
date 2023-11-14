@@ -17,7 +17,7 @@ function game() {
         req: Request,
         res: Response,
     ){
-        console.log('get game - getting game state.')
+        console.log(`getting game state: game/${req.params.id}`)
         let data = await GameStateController().get(req.params.id);
         res.send(data)
         return data
@@ -26,8 +26,8 @@ function game() {
         req: Request,
         res: Response,
     ){
-        console.log('get game - getting game state.')
-        let data = await GameStateController().getCountries();
+        console.log(`getting countries: game/${req.params.id}/countries`)
+        let data = await GameStateController().getCountries(req.params.id);
         res.send(data)
         return data
     }

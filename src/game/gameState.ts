@@ -7,6 +7,7 @@ import ShortUniqueId from 'short-unique-id';
 import { GAMESTATE_TABLE, COUNTRIES_TABLE, OWNERSHIP_TABLE, PLAYERS_TABLE, COUNTRIES_BASE_TABLE} from '../db/tables';
 import RiskLogger from '../common/util/riskLogger'; 
 import { NoRecordsError } from '../common/types/errors';
+import game from './gameController';
 
 
 let uid = new ShortUniqueId({length: 10});
@@ -60,7 +61,7 @@ function GameStateController() {
         let data: GameStateRecord;    
         try {
             let players = await getPlayers("42");
-            let countries = await getCountries();
+            let countries = await getCountries(gameID);
             data = {
                 players: players,
                 country: countries,
@@ -126,7 +127,7 @@ function GameStateController() {
             })
         return data
     }
-    async function getCountries(): Promise<Country[]> {
+    async function getCountries(gameID: string): Promise<Country[]> {
         var data: Country[];
         data = await db.select(
             "country.id",
@@ -138,7 +139,7 @@ function GameStateController() {
             .from(`${COUNTRIES_BASE_TABLE} as country`)
             // .join(`${OWNERSHIP_TABLE} as ownership`, {"ownership.countryId": "country.id"})
             // .where("gameID", gameID) TODO: add gameID to countriesBase
-            // .orderBy("country.updated_at", "desc")
+            .orderBy("country.id", "asc")
             .then((result) => {
                 return result.map((row) => {
                     return {
