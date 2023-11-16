@@ -6,8 +6,9 @@ import { default as knexConfig } from '../knexfile';
 import ShortUniqueId from 'short-unique-id';
 import { GAMESTATE_TABLE, COUNTRIES_TABLE, OWNERSHIP_TABLE, PLAYERS_TABLE, COUNTRIES_BASE_TABLE} from '../db/tables';
 import RiskLogger from '../common/util/riskLogger'; 
-import { NoRecordsError } from '../common/types/errors';
+import { NoRecordsError, UpdateError } from '../common/types/errors';
 import game from './gameController';
+
 
 
 let uid = new ShortUniqueId({length: 10});
@@ -91,8 +92,8 @@ function GameStateController() {
                     data.phase = result[0].phase;
                     data.activePlayerId = result[0].activePlayerId;
                     data.id = result[0].id;
-                    data.created_at = result[0].created_at;
-                    data.updated_at = result[0].updated_at;
+                    // data.created_at = result[0].created_at;
+                    // data.updated_at = result[0].updated_at;
                     return data
                 })
 
@@ -107,8 +108,10 @@ function GameStateController() {
             "player.id",
             "player.name",
             "player.armies",
-            "player.created_at",
-            "player.updated_at")
+            "player.color",
+            // "player.created_at",
+            // "player.updated_at"
+            )
             .from(`${PLAYERS_TABLE} as player`)
             .where("player.gameID", gameID)
             .orderBy("player.id", "asc")
@@ -181,7 +184,32 @@ function GameStateController() {
     }
     async function update(currentState: GameStateRecord): Promise<GameStateRecord> {
         var data: GameStateRecord = currentState;
-        let gameID = "42"
+        let countries: Country[] = currentState.country;
+        let players: Player[] = currentState.players;
+        let gameStateUpdate: GameStateRecord = {
+            id: "42",//currentState.id,
+            turn: currentState.turn,
+            phase: currentState.phase,
+            activePlayerId: currentState.activePlayerId,
+        }
+
+        try {
+            
+            await db.from(`${GAMESTATE_TABLE}` as "game").where("game.id", currentState.id).update(gameStateUpdate)
+            await db.from(`${PLAYERS_TABLE}`).update(players)
+            await db.from(`${COUNTRIES_BASE_TABLE}`).update(countries)       
+            
+        } catch (err: any) {
+            throw new UpdateError({
+                message: `Error updating gamestate: ${err.message}`,
+            })
+        }
+
+
+        //update countries table
+        //update players table
+        //update ownership table
+        //update gamestate table
         
         return data
     }

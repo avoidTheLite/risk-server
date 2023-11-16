@@ -89,3 +89,17 @@ export class AttackError extends Error {
     this.isOperational = true;
   }
 }
+
+export class UpdateError extends Error {
+  name: string;
+  httpCode: HttpCode;
+
+  constructor(args: AppErrorArgs) {
+    super(args.message);
+
+    Object.setPrototypeOf(this, new.target.prototype);
+
+    this.name = 'UpdateError';
+    this.httpCode = HttpCode.INTERNAL_SERVER_ERROR;
+  }
+}
