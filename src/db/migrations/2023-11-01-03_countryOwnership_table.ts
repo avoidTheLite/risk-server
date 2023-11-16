@@ -2,7 +2,7 @@ import { Knex } from "knex";
 
 export async function up(knex: Knex): Promise<void> {
   return knex.schema.createTable("ownership", (table) => {
-    table.increments("playerId");
+    table.string("playerId");
     table.string("countryId");
     table.timestamps(true, true);
   });

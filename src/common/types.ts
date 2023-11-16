@@ -5,6 +5,7 @@ export interface Player {
     continentsControlled?: Continent[];
     color?: string;
     armies: number;
+    gameID?: string;
 }
 
 export interface Globe {
@@ -20,7 +21,7 @@ export interface Country {
     id: string;
     continent?: string;
     connectedTo?: string[];
-    ownerID?: number;
+    ownerID?: string;
     armies?: number;
 }
 
@@ -34,8 +35,8 @@ export interface CountryRecord {
 }
 
 export interface CountryOwnershipRecord {
-    country_id: string;
-    player_id: number;
+    countryId: string;
+    playerId: string;
 }
 
 export interface Continent {

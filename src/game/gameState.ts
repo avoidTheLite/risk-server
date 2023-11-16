@@ -1,10 +1,10 @@
 import config from '../config';
-import {Player, Globe, Country, GameState, GameStateRecord} from '../common/types'
+import {Player, Globe, Country, GameState, GameStateRecord, CountryOwnershipRecord} from '../common/types'
 import { countrySeed } from '../db/seeds/models/seedData';
 import Knex from 'knex';
 import { default as knexConfig } from '../knexfile';
 import ShortUniqueId from 'short-unique-id';
-import { GAMESTATE_TABLE, COUNTRIES_TABLE, OWNERSHIP_TABLE, PLAYERS_TABLE, COUNTRIES_BASE_TABLE} from '../db/tables';
+import { GAMESTATE_TABLE, COUNTRIES_TABLE, OWNERSHIP_TABLE, PLAYERS_TABLE, COUNTRIES_BASE_TABLE, PLAYERS_AI_TABLE} from '../db/tables';
 import RiskLogger from '../common/util/riskLogger'; 
 import { NoRecordsError, UpdateError } from '../common/types/errors';
 import game from './gameController';
@@ -41,7 +41,7 @@ var example_globe:Globe = {
 function GameStateController() {
     const db = Knex(knexConfig[config.get('env')]);
 
-    async function initialize(): Promise<GameStateRecord> {
+    async function initialize(players?: Player[]): Promise<GameStateRecord> {
         let data1: GameStateRecord = {
             id: uid.rnd(),
             turn: 0,
@@ -50,6 +50,15 @@ function GameStateController() {
         };
         try{
             await db("gameState").insert(data1);
+            let playersUpdate: Player[] = players;
+            for (let i = 0; i < playersUpdate.length; i++) {
+                const playerUpdate: Player = playersUpdate[i];
+                playerUpdate.gameID = data1.id;
+                playerUpdate.armies = 0;
+                await db.from(`${PLAYERS_TABLE}`).where({id: playerUpdate.id}).insert(playerUpdate)
+            }
+
+            
         }
         catch (err) {
             console.log(err)
@@ -61,7 +70,7 @@ function GameStateController() {
         
         let data: GameStateRecord;    
         try {
-            let players = await getPlayers("42");
+            let players = await getPlayers(gameID);
             let countries = await getCountries(gameID);
             data = {
                 players: players,
@@ -109,6 +118,7 @@ function GameStateController() {
             "player.name",
             "player.armies",
             "player.color",
+            "player.gameID",
             // "player.created_at",
             // "player.updated_at"
             )
@@ -123,12 +133,31 @@ function GameStateController() {
                         // countriesOccupied: row.countriesOccupied,
                         // continentsControlled: row.continentsControlled,
                         armies: row.armies,
-                        created_at: row.created_at,
-                        updated_at: row.updated_at
+                        color: row.color,
+                        // created_at: row.created_at,
+                        // updated_at: row.updated_at
                     }
                 })
             })
         return data
+    }
+    
+    async function addPlayers(gameID: string, players: Player[]): Promise<void> {
+        var data: Player[] = players;
+        try {
+            for (let i = 0; i < players.length; i++) {
+                const playerUpdate: Player = players[i];
+                playerUpdate.gameID = gameID;
+                playerUpdate.armies = 0;
+            await db.from(`${PLAYERS_TABLE}`).where({id: playerUpdate.id}).update(playerUpdate)// need to update while the 42 game is still the seed.
+            // await db.from(`${PLAYERS_TABLE}`).where({id: playerUpdate.id}).insert(playerUpdate)
+            }
+        }
+        catch (err: any) {
+            throw new UpdateError({
+                message: `Error updating players table: ${err} Players:  ${JSON.stringify(players)}`,
+            })
+        }
     }
     async function getCountries(gameID: string): Promise<Country[]> {
         var data: Country[];
@@ -156,6 +185,16 @@ function GameStateController() {
                 })
             })
             return data
+    }
+ 
+    async function updateCountryOwnership(gameID: string, countries: Country[]): Promise<void> {
+        for (let i = 0; i < countries.length; i++) {
+            let countryUpdate: CountryOwnershipRecord;
+            countryUpdate.playerId = countries[i].ownerID;
+            countryUpdate.countryId = countries[i].id;
+            // countryUpdate.gameID = gameID;
+            await db.from(`${OWNERSHIP_TABLE}`).insert(countryUpdate)
+        }
     }
     async function list(): Promise<GameStateRecord[]> {
         let data = await db("gameState")
@@ -187,21 +226,44 @@ function GameStateController() {
         let countries: Country[] = currentState.country;
         let players: Player[] = currentState.players;
         let gameStateUpdate: GameStateRecord = {
-            id: "42",//currentState.id,
+            id: currentState.id,
             turn: currentState.turn,
-            phase: currentState.phase,
+            phase: "attack",//currentState.phase,
             activePlayerId: currentState.activePlayerId,
         }
 
         try {
-            
-            await db.from(`${GAMESTATE_TABLE}` as "game").where("game.id", currentState.id).update(gameStateUpdate)
-            await db.from(`${PLAYERS_TABLE}`).update(players)
-            await db.from(`${COUNTRIES_BASE_TABLE}`).update(countries)       
-            
-        } catch (err: any) {
+            console.log(JSON.stringify(players))
+            await db.from(`${GAMESTATE_TABLE}`).where({id: gameStateUpdate.id}).update(gameStateUpdate)
+        }
+        catch (err: any) {
             throw new UpdateError({
-                message: `Error updating gamestate: ${err.message}`,
+                message: `Error updating gamestate table: ${err.message}`,
+            })
+        }
+        try {
+            for (let i = 0; i < players.length; i++) {
+                const playerUpdate: Player = players[i];
+                playerUpdate.gameID = gameStateUpdate.id;
+            await db.from(`${PLAYERS_TABLE}`).where({id: playerUpdate.id}).update(playerUpdate)
+            }
+        }
+        catch (err: any) {
+            throw new UpdateError({
+                message: `Error updating players table: ${err.message} Players:  ${JSON.stringify(players)}`,
+            })
+        }
+        try {
+            for (let i = 0; i < countries.length; i++) {
+                const countryUpdate: Country = countries[i];
+                // countryUpdate.gameID = gameStateUpdate.id;
+            await db.from(`${COUNTRIES_BASE_TABLE}`).where({id: countryUpdate.id}).update(countryUpdate)       
+            
+            }
+        }
+        catch (err: any) {
+            throw new UpdateError({
+                message: `Error updating countries table: ${err.message}`,
             })
         }
 
@@ -217,7 +279,9 @@ return  {
     initialize,
     get,
     getPlayers,
+    addPlayers,
     getCountries,
+    updateCountryOwnership,
     list,
     update
     }

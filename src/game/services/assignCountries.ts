@@ -10,7 +10,7 @@ import { Country, Player } from "../../common/types";
 
 
 
-async function assignCountries(countries: Country[], players: Player[]) {
+async function assignCountries(countries: Country[], players: Player[], gameID: string) {
     let totalCountries = countries.length
     let countriesDivided = Math.floor(totalCountries / players.length)
     let extraCountries = totalCountries % players.length
@@ -18,17 +18,20 @@ async function assignCountries(countries: Country[], players: Player[]) {
     for (let i = 1; i < players.length + 1; i++) {
         for (let j = 1; j <= countriesDivided; j++, i++) {
             let newID = j+(i-1)*countriesDivided-1;
-            countries[newID].ownerID = i;
+            countries[newID].ownerID = i.toString();
         }
     }
-    if (extraCountries === 0) return countries
+    if (extraCountries === 0) {}
     else{
         for (let i = 1; i <= extraCountries; i++) {
             let index =players.length*countriesDivided;
-            countries[index+i-1].ownerID = i;
+            countries[index+i-1].ownerID = i.toString();
         }
-         return countries
+         
     }
+    console.log('assigning countries')
+    await GameStateController().updateCountryOwnership(gameID, countries)
+    return countries
 }
 
 export default assignCountries

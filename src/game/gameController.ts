@@ -1,6 +1,7 @@
 import GameStateController from "./gameState";
 import { NextFunction, Request, Response } from 'express';
 import gameStart from "./services/startGame";
+import {Player} from '../common/types'
 
 function game() {
     async function newGame(
@@ -8,7 +9,8 @@ function game() {
         res: Response,
     ) {
         console.log('new game - initializing.')
-        let data = await GameStateController().initialize();
+        let players: Player[] = req.body.players;
+        let data = await GameStateController().initialize(players);
         await gameStart(data.id);
         res.send(data)
         return data
