@@ -2,7 +2,7 @@ import {Knex } from 'knex';
 
 export async function up(knex: Knex): Promise<void> {
   return knex.schema.createTable('countriesBase', (table) => {
-    table.increments('id').primary();
+    table.string('id').primary();
     table.string('name')
     table.string('continent')
     table.integer('armies')

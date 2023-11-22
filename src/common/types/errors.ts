@@ -103,3 +103,17 @@ export class UpdateError extends Error {
     this.httpCode = HttpCode.INTERNAL_SERVER_ERROR;
   }
 }
+
+export class UpdateRecordError extends Error {
+  name: string;
+  httpCode: HttpCode;
+
+  constructor(args: AppErrorArgs) {
+    super(args.message);
+
+    Object.setPrototypeOf(this, new.target.prototype);
+
+    this.name = 'UpdateRecordError';
+    this.httpCode = HttpCode.INTERNAL_SERVER_ERROR;
+  }
+}

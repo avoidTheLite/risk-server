@@ -5,7 +5,7 @@
 
 import { GameStateRecord, phase } from "../../common/types"
 import { GameState} from '../../common/types'
-import GameStateController from '../gameState'
+import GameStateController from './gameState'
 
 
 

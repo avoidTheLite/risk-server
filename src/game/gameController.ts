@@ -1,6 +1,6 @@
-import GameStateController from "./gameState";
+import GameStateController from "./services/gameState";
 import { NextFunction, Request, Response } from 'express';
-import gameStart from "./services/startGame";
+import gameStart from "./services/gameStart";
 import {Player} from '../common/types'
 
 function game() {
