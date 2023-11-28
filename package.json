@@ -10,6 +10,7 @@
     "dev": "NODE_ENV=local concurrently \"npx tsc --watch\" \"nodemon -q dist/server.js\"",
     "docker:db": "docker-compose up -d",
     "db:migrate": "NODE_ENV=local knex migrate:latest --knexfile=\"src/knexfile.ts\"",
+    "db:rollback": "NODE_ENV=local knex migrate:rollback --all --knexfile=\"src/knexfile.ts\"",
     "db:seed": "NODE_ENV=local knex seed:run --knexfile=\"src/knexfile.ts\""
   },
   "repository": {

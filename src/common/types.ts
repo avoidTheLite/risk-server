@@ -36,7 +36,7 @@ export interface CountryRecord {
 
 export interface CountryOwnershipRecord {
     countryId: string;
-    playerId: string;
+    ownerId: string;
 }
 
 export interface Continent {
@@ -61,7 +61,7 @@ export interface GameStateRecord {
     id: string;
     turn: Number;
     phase: phase;
-    activePlayerId: number;
+    activePlayerId: string;
     created_at?: string,
     updated_at?: string,
     died_at?: string,

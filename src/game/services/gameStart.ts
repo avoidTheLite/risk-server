@@ -15,7 +15,7 @@ async function gameStart(gameID: string) {
         let currentState: GameStateRecord = await GameStateController().get(gameID);
         currentState.country = await GameStateController().getCountries(gameID);
         currentState.turn = 0
-        currentState.activePlayerId = 1
+        currentState.activePlayerId = "1"
         currentState.players = await GameStateController().getPlayers("42");//TODO: rework when players come from AI table.
             await GameStateController().addPlayers(gameID, currentState.players)
         //country assignment
@@ -29,14 +29,10 @@ async function gameStart(gameID: string) {
         
 
         currentState.players[i].armies = 40 - countries.filter(value => value.ownerID === (i+1).toString()).length;
-    
+        
         }
+        await GameStateController().update(currentState)
     } catch (error) {console.debug(error)}
-
-    // currentState.phase = 'deploy' 
-    // currentState.turn = 1
-
-    // await GameStateController().update(currentState)
     return
 }
 

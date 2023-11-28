@@ -16,13 +16,12 @@ function CommandController() {
         let currentState: GameStateRecord = await GameStateController().get(req.body.gameID);
         const launch = await turnStart(req.body.gameID);
         const commands = availableCommands(currentState.phase, req.body.player, currentState.activePlayerId);
-        res.send(currentState);
-        return commands;
+        res.send(commands);
     }
 
     async function deployTroops(req: Request, res: Response) {
         let currentState: GameStateRecord = await GameStateController().get(req.body.gameID);
-        const activePlayer: number = currentState.activePlayerId;
+        const activePlayer: number = parseInt(currentState.activePlayerId);
         let targetCountry: number = req.body.targetCountry;
         currentState.country[targetCountry-1].armies += req.body.troopCount;
         if (currentState.players) {
@@ -39,9 +38,8 @@ function CommandController() {
     async function attack(req: Request, res: Response) {
         //Read state and get the attacking country, defending country, and troop count
         let currentState: GameStateRecord = await GameStateController().get(req.body.gameID);
-        const activePlayer: number = currentState.activePlayerId;
-        const attackingCountryID: number = req.body.attackingCountry;
-        const defendingCountryID: number = req.body.defendingCountry;
+        const attackingCountryID: number = parseInt(req.body.attackingCountry);
+        const defendingCountryID: number = parseInt(req.body.defendingCountry);
         const troopCount: number = req.body.troopCount;
         
         

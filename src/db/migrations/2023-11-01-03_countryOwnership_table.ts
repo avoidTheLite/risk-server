@@ -2,8 +2,8 @@ import { Knex } from "knex";
 
 export async function up(knex: Knex): Promise<void> {
   return knex.schema.createTable("ownership", (table) => {
-    table.string("countryId");
-    table.string("playerId");
+    table.string("countryId").primary();
+    table.string("ownerId");
     table.timestamps(true, true);
   });
 }

@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import bodyParser from "body-parser";
 import CommandController from './commandController'
-import { Engagement } from '../common/types'
 import RiskLogger from '../common/util/riskLogger';
 import { logger } from 'express-winston';
 

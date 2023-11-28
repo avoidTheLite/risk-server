@@ -5,7 +5,7 @@ import { DeployPhaseCommands, attackerCommands, defenderCommands } from "../play
 
 
 
-function availableCommands(phase: string, player: number, activePlayerId: number) {
+function availableCommands(phase: string, player: string, activePlayerId: string) {
     let commands = {
         deployTroops: {
             available: false,

@@ -18,13 +18,16 @@ async function assignCountries(countries: Country[], players: Player[], gameID: 
     let extraCountries = totalCountries % players.length
     var countriesInsert: Country [];
     try {
-    for (let i=1; i<=totalCountries; i++){
-        if (i===1) {
+    for (let i=0; i<totalCountries; i++){
+        if (i===0) {
             countriesInsert = countries
         }
-        countriesInsert[i].ownerID = ((i+players.length) % players.length + 1).toString()
+        countriesInsert[i].ownerID = ((i+players.length) % players.length + 1).toString();
+        countriesInsert[i].armies = 1;
+        console.log(countriesInsert[i].id + countriesInsert[i].ownerID)
         
-    }} catch (error) {console.debug(error)}
+    }} catch (error) {console.debug(error)
+    console.debug(countriesInsert)}
     console.log('assigning countries')
     try {
     await GameStateController().updateCountryOwnership(gameID, countriesInsert);

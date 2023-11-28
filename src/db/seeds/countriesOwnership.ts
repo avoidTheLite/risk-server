@@ -8,14 +8,14 @@ export async function seed(knex: Knex): Promise<void> {
 
     var countries: Country[] = countrySeed();
     var ownershipTable: CountryOwnershipRecord[];
-    
-    for (let i=0; i<countries.length; i++) {{
+    try{
+    for (let i=1; i<countries.length; i++) {{
       let row = {
         countryId: i.toString(),
-        playerId: countries[i].ownerID
-      }
-      await knex("ownership").insert(row);
+        ownerId: countries[i-1].ownerID      }
+        await knex("ownership").insert(row);
         
     } }
+  } catch (error) {console.debug(error)}
   
 }

@@ -47,7 +47,7 @@ function GameStateController() {
             id: uid.rnd(),
             turn: 0,
             phase: "start",
-            activePlayerId: 1,
+            activePlayerId: "1",
         };
         try{
             await db("gameState").insert(data1);
@@ -78,7 +78,7 @@ function GameStateController() {
                 country: countries,
                 phase: "start",
                 turn: 0,
-                activePlayerId: 1,
+                activePlayerId: "", 
                 id: gameID
             }
             data.phase = "start"
@@ -102,8 +102,6 @@ function GameStateController() {
                     data.phase = result[0].phase;
                     data.activePlayerId = result[0].activePlayerId;
                     data.id = result[0].id;
-                    // data.created_at = result[0].created_at;
-                    // data.updated_at = result[0].updated_at;
                     return data
                 })
 
@@ -191,19 +189,19 @@ function GameStateController() {
     }
  
     async function updateCountryOwnership(gameID: string, countries: Country[]): Promise<void> {
-        for (let i = 0; i < 42; i++) {
+        for (let i = 1; i <= countries.length; i++) {
             let countryUpdate: CountryOwnershipRecord = {
-                playerId: countries[i].ownerID,
-                countryId: countries[i].id,
+                countryId: countries[i-1].id.toString(),
+                ownerId: countries[i-1].ownerID,
             }
             // countryUpdate.gameID = gameID;
-            if (countryUpdate.playerId !== undefined) {
+            if (countryUpdate.ownerId !== undefined) {
                 try {
                     let dbfun = await db("ownership")
                         // .from(`${OWNERSHIP_TABLE} as o`)
                         .where({countryId:countryUpdate.countryId})
                         .update({
-                        playerId: countryUpdate.playerId,
+                            ownerId: countryUpdate.ownerId,
                         // gameID: gameID,
                     })
                     console.log(dbfun)
@@ -278,6 +276,7 @@ function GameStateController() {
             for (let i = 0; i < countries.length; i++) {
                 const countryUpdate: Country = countries[i];
                 // countryUpdate.gameID = gameStateUpdate.id;
+                delete countryUpdate.ownerID;
             await db.from(`${COUNTRIES_BASE_TABLE}`).where({id: countryUpdate.id}).update(countryUpdate)       
             
             }
