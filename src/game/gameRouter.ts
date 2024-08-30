@@ -12,6 +12,7 @@ gameRouter.get('/', controller.list);
 gameRouter.post('/new', controller.newGame);
 gameRouter.get('/:id', controller.get);
 gameRouter.get('/:id/countries', controller.getCountries);
+gameRouter.get('/:id/players', controller.getPlayers);
 // router.post('game/end', controller.end);
 
 

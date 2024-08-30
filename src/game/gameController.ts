@@ -42,11 +42,21 @@ function game() {
         res.send(data)
         return data
     }
+    async function getPlayers(
+        req: Request,
+        res: Response,  
+    ){
+        console.log(`getting players: game/${req.params.id}/players`)
+        let data = await GameStateController().getPlayers(req.params.id);
+        res.send(data)
+        return data
+    }
     return {
         newGame,
         get,
         getCountries,
-        list
+        list,
+        getPlayers
     }
 }
 
