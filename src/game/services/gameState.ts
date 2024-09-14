@@ -56,7 +56,7 @@ function GameStateController() {
                 const playerUpdate: Player = playersUpdate[i];
                 playerUpdate.gameID = data1.id;
                 playerUpdate.armies = 0;
-                await db.from(`${PLAYERS_TABLE}`).where({id: playerUpdate.id}).insert(playerUpdate)
+                await db.from(`${PLAYERS_TABLE}`).insert(playerUpdate)  
             }
 
             
@@ -139,26 +139,6 @@ function GameStateController() {
                 })
             })
         return data
-    }
-    
-    async function addPlayers(gameID: string, players: Player[]): Promise<void> {
-        var data: Player[] = players;
-            
-
-        try {
-            for (let i = 0; i < players.length; i++) {
-                const playerUpdate: Player = players[i];
-                playerUpdate.gameID = gameID;
-                playerUpdate.armies = 0;
-                await db.from(`${PLAYERS_TABLE}`).where({id: playerUpdate.id}).update(playerUpdate)// need to update while the 42 game is still the seed.
-            // await db.from(`${PLAYERS_TABLE}`).where({id: playerUpdate.id}).insert(playerUpdate)
-            }
-        }
-        catch (err: any) {
-            throw new UpdateError({
-                message: `Error updating players table: ${err} Players:  ${JSON.stringify(players)}`,
-            })
-        }
     }
     async function getCountries(gameID: string): Promise<Country[]> {
         var data: Country[];
@@ -252,24 +232,11 @@ function GameStateController() {
         }
 
         try {
-            console.log(JSON.stringify(players))
             await db.from(`${GAMESTATE_TABLE}`).where({id: gameStateUpdate.id}).update(gameStateUpdate)
         }
         catch (err: any) {
             throw new UpdateError({
                 message: `Error updating gamestate table: ${err.message}`,
-            })
-        }
-        try {
-            for (let i = 0; i < players.length; i++) {
-                const playerUpdate: Player = players[i];
-                playerUpdate.gameID = gameStateUpdate.id;
-            await db.from(`${PLAYERS_TABLE}`).where({id: playerUpdate.id}).update(playerUpdate)
-            }
-        }
-        catch (err: any) {
-            throw new UpdateError({
-                message: `Error updating players table: ${err.message} Players:  ${JSON.stringify(players)}`,
             })
         }
         try {
@@ -299,7 +266,6 @@ return  {
     initialize,
     get,
     getPlayers,
-    addPlayers,
     getCountries,
     updateCountryOwnership,
     list,
