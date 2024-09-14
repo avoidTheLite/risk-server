@@ -14,13 +14,13 @@ import { NoTroopError, AttackError } from '../common/types/errors'
 function CommandController() {
     async function get(req: Request, res: Response) {
         let currentState: GameStateRecord = await GameStateController().get(req.body.gameID);
-        const launch = await turnStart(req.body.gameID);
         const commands = availableCommands(currentState.phase, req.body.player, currentState.activePlayerId);
+        //TODO validate the commands
         res.send(commands);
     }
 
     async function deployTroops(req: Request, res: Response) {
-        let currentState: GameStateRecord = await GameStateController().get(req.body.gameID);
+        let currentState: GameStateRecord = await GameStateController().get(req.body.gameID); //TODO: rework to not read DB so often
         const activePlayer: number = parseInt(currentState.activePlayerId);
         let targetCountry: number = req.body.targetCountry;
         currentState.country[targetCountry-1].armies += req.body.troopCount;

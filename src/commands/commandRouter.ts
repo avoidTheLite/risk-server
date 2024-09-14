@@ -9,7 +9,7 @@ const router = Router();
 const controller = CommandController();
 router.use(bodyParser.json())
 
-router.get('/commands', controller.get);
+router.get('/', controller.get);
 router.post('/attack', controller.attack);
 router.post('/deployTroops', controller.deployTroops);
 

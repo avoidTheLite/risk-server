@@ -227,7 +227,7 @@ function GameStateController() {
         let gameStateUpdate: GameStateRecord = {
             id: currentState.id,
             turn: currentState.turn,
-            phase: "attack",//currentState.phase,
+            phase: currentState.phase,
             activePlayerId: currentState.activePlayerId,
         }
 
