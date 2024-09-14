@@ -2,7 +2,7 @@ import { Knex } from "knex";
 
 export async function up(knex: Knex): Promise<void> {
   return knex.schema.createTable("players", (table) => {
-    table.string("id").primary();
+    table.string("id");
     table.string("gameID");
     table.integer("armies");
     table.string("name");
