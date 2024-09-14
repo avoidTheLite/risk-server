@@ -1,12 +1,13 @@
 version: '3.4'
 services:
-  redis:
-    image: "redis/redis-stack:latest"
-    volumes:
-      - redis_data:/data
+  postgres:
+    image: 'postgres:15.4'
     ports:
-      - "6379:6379"
+      - ${DB_PORT}:5432
     environment:
-      REDIS_ARGS: "--appendonly yes --aof-use-rdb-preamble yes"
-volumes:
-  redis_data:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=risk-server
+    env_file:
+      - .env
+      

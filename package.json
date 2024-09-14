@@ -1,13 +1,17 @@
 {
-  "dependencies": {
-    "express": "^4.18.2"
-  },
   "name": "risk-server",
   "version": "1.0.0",
   "description": "Server portion of game, where primary state of game will reside. ",
   "main": "server.js",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "build": "npx tsc",
+    "start": "node dist/index.js",
+    "dev": "NODE_ENV=local concurrently \"npx tsc --watch\" \"nodemon -q dist/server.js\"",
+    "docker:db": "docker-compose up -d",
+    "db:migrate": "NODE_ENV=local knex migrate:latest --knexfile=\"src/knexfile.ts\"",
+    "db:rollback": "NODE_ENV=local knex migrate:rollback --all --knexfile=\"src/knexfile.ts\"",
+    "db:seed": "NODE_ENV=local knex seed:run --knexfile=\"src/knexfile.ts\""
   },
   "repository": {
     "type": "git",
@@ -18,5 +22,29 @@
   "bugs": {
     "url": "https://github.com/avoidTheLite/risk-server/issues"
   },
-  "homepage": "https://github.com/avoidTheLite/risk-server#readme"
+  "homepage": "https://github.com/avoidTheLite/risk-server#readme",
+  "dependencies": {
+    "@types/convict": "^6.1.6",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-async-errors": "^3.1.1",
+    "express-winston": "^4.2.0",
+    "knex": "^3.0.1",
+    "pg": "^8.11.0",
+    "serverless-http": "^3.2.0",
+    "short-unique-id": "^5.0.3",
+    "winston": "^3.11.0",
+    "yargs": "^17.7.2"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.16",
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.9.0",
+    "concurrently": "^8.2.2",
+    "nodemon": "^3.0.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
+  }
 }
