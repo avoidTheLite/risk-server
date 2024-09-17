@@ -7,6 +7,8 @@ import { GameStateRecord, phase } from "../../common/types"
 import { GameState} from '../../common/types'
 import GameStateController from './gameState'
 import assignCountries from './assignCountries'
+import { UpdateError } from "../../common/types/errors";
+import { Country, Player } from "../../common/types";
 
 
 
@@ -22,8 +24,15 @@ async function gameStart(gameID: string) {
         //country assignment
 
         let countries = currentState.country
-        countries = await assignCountries(countries, currentState.players, gameID)
-        
+        let countriesInsert: Country[] = []
+        try {
+            countries = await assignCountries(countries, currentState.players, gameID)
+            await GameStateController().updateCountryOwnership(gameID, countriesInsert);
+            }
+            catch (err: any) {
+                throw new UpdateError({message: err.message})
+                return err
+            }
     
         // give each player X armies
         for (let i = 0; i < currentState.players.length; i++) {
