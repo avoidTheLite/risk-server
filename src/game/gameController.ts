@@ -51,10 +51,20 @@ function game() {
         res.send(data)
         return data
     }
+    async function updatePlayers(
+        req: Request,
+        res: Response,  
+    ){
+        console.log(`Updating players: game/${req.params.id}/players`)
+        let data = await GameStateController().updatePlayers(req.params.id, req.body.players);
+        res.send(data)
+        return data
+    }
     return {
         newGame,
         get,
         getCountries,
+        updatePlayers,
         list,
         getPlayers
     }

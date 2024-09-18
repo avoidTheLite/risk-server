@@ -41,7 +41,13 @@ async function gameStart(gameID: string) {
         currentState.players[i].armies = 40 - countries.filter(value => value.ownerID === (i+1).toString()).length; //TODO: vary starting armies based on player count
         
         }
-        await GameStateController().update(currentState)
+        try{
+        await GameStateController().updatePlayers(gameID, currentState.players)
+    
+        } catch (err: any) {
+            throw new UpdateError({message: err.message})
+            return err
+        }
     } catch (error) {console.debug(error)}
     return
 }
