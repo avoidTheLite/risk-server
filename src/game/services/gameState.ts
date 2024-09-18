@@ -253,15 +253,51 @@ function GameStateController() {
                 message: `Error updating countries table: ${err.message}`,
             })
         }
-
+    return
+    }
 
         //update countries table
         //update players table
+        async function updatePlayers(gameID: string, players: Player[]): Promise<Player[]> {
+            // let players: Player[] = currentState.players;
+            let updated_players: Player[];
+            console.log(`updating players with ${players}`)
+    
+            try {
+                updated_players = await db
+                    .select(
+                    "player.gameID",
+                    "player.id",
+                    "player.name",
+                    "player.armies",
+                    "player.color",
+                    )
+                    .from(`${PLAYERS_TABLE} as player`)
+                    .where("player.gameID", gameID)
+                    .orderBy("player.id", "asc")
+                    .update({
+                        gameID: gameID,
+                        name: players[0].name,
+                        color: players[0].color,
+                        armies: players[0].armies,
+                        id: players[0].id
+            })
+
+                console.log(`Returned from update function: ${updated_players}`); 
+
+            }
+        
+            catch (err: any) {
+                throw new UpdateError({
+                    message: `Error updating player table: ${err.message}`,
+                })
+            }
+            return 
+        }
         //update ownership table
         //update gamestate table
         
-        return data
-    }
+
 return  {
     initialize,
     get,
@@ -269,7 +305,8 @@ return  {
     getCountries,
     updateCountryOwnership,
     list,
-    update
+    update,
+    updatePlayers,
     }
 }
 

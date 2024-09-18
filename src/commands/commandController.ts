@@ -24,13 +24,12 @@ function CommandController() {
         const activePlayer: number = parseInt(currentState.activePlayerId);
         let targetCountry: number = req.body.targetCountry;
         currentState.country[targetCountry-1].armies += req.body.troopCount;
-        if (currentState.players) {
         currentState.players[activePlayer-1].armies -= req.body.troopCount;
-        }
         if (currentState.players[activePlayer-1].armies == 0) {
             currentState.phase = 'attack';
         }
         await GameStateController().update(currentState);
+        await GameStateController().updatePlayers(req.body.gameID, currentState.players);
         res.send(currentState)
 
     }
