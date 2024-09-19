@@ -59,7 +59,7 @@ export interface GameState {
 
 export interface GameStateRecord {
     id: string;
-    turn: Number;
+    turn: number;
     phase: phase;
     activePlayerId: string;
     created_at?: string,

@@ -95,10 +95,20 @@ function CommandController() {
     // async function UndoController() {
         
     // }
+
+    async function endTurn(req: Request, res: Response) {
+        let currentState: GameStateRecord = await GameStateController().get(req.body.gameID);
+        currentState.turn += 1;
+        currentState.phase = 'deploy';
+        currentState.activePlayerId = currentState.players[currentState.turn % currentState.players.length].id.toString();
+        await GameStateController().update(currentState);
+        res.send(currentState)
+    }
     return {
         get,
         deployTroops,
         attack,
+        endTurn,
         // MoveController,
         // RewardController,
         // UndoController

@@ -11,7 +11,8 @@ router.use(bodyParser.json())
 
 router.get('/', controller.get);
 router.post('/attack', controller.attack);
-router.post('/deployTroops', controller.deployTroops);
+router.post('/deployTroops', controller.deployTroops)
+router.post('/endTurn', controller.endTurn);
 
 
 export default router
