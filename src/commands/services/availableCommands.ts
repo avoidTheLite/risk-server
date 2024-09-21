@@ -35,15 +35,11 @@ function availableCommands(phase: string, player: string, activePlayerId: string
         
     
     if (player == activePlayerId) {
-        if (phase == 'start') {
-            commands.deployTroops.available = true;
-            commands.endTurn.available  = true;
-        }
         if (phase == 'deploy') {
             commands.deployTroops.available = true;
-            commands.cardMatch.available  = true;
         }
-        if (phase == 'attack') {
+        if (phase == 'play') {
+            commands.deployTroops.available = true;
             commands.attack.available = true;
             commands.move.available = true;
             commands.endTurn.available = true;

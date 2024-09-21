@@ -12,18 +12,11 @@ import GameStateController from './gameState'
 async function turnStart(gameID: string) {
     const currentState: GameStateRecord = await GameStateController().get(gameID);
     const activePlayer: number = parseInt(currentState.activePlayerId, 10);
-    currentState.players[activePlayer-1].armies += 5;
-
-    //check if player has cards to match
-    //await checkCards(cards, activePlayer)
-    //determine reinforcement count
-
-    currentState.phase = 'deploy';
-    console.log(currentState.players[activePlayer].name + ' turn start');
-    if (currentState.players[activePlayer].armies === 0) {
-        currentState.phase = 'attack';
+    if (currentState.phase == 'play') {
+        currentState.players[activePlayer-1].armies += 5;
+        console.log(currentState.players[activePlayer-1].name + ' turn start');
     }
-    await GameStateController().update(currentState);
+    await GameStateController().updatePlayers(gameID, currentState.players);
     return currentState;
 }
 

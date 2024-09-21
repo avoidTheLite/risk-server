@@ -69,7 +69,7 @@ export interface GameStateRecord {
     country?: Country[],
 }
 
-export type phase = "deploy" | "attack" | "move" | "end" | "start" | "gameStart"
+export type phase = "start" | "deploy" | "play" | "end"
 
 export interface combatResult {
     attackersLost: number;

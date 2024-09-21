@@ -25,9 +25,6 @@ function CommandController() {
         let targetCountry: number = req.body.targetCountry;
         currentState.country[targetCountry-1].armies += req.body.troopCount;
         currentState.players[activePlayer-1].armies -= req.body.troopCount;
-        if (currentState.players[activePlayer-1].armies == 0) {
-            currentState.phase = 'attack';
-        }
         await GameStateController().update(currentState);
         await GameStateController().updatePlayers(req.body.gameID, currentState.players);
         res.send(currentState)
@@ -97,9 +94,23 @@ function CommandController() {
 
     async function endTurn(req: Request, res: Response) {
         let currentState: GameStateRecord = await GameStateController().get(req.body.gameID);
+        const activePlayer: number = parseInt(currentState.activePlayerId, 10);
+        if (currentState.phase == 'deploy') {
+            let armyCount:number = 0;
+            for (let i = 0; i < currentState.players.length; i++) {
+                armyCount = armyCount + currentState.players[i].armies
+            }
+            if (armyCount == 0) {
+                currentState.phase = 'play';
+            }
+        }
+        if (currentState.phase == 'play') {
         currentState.turn += 1;
-        currentState.phase = 'deploy';
-        currentState.activePlayerId = currentState.players[currentState.turn % currentState.players.length].id.toString();
+        currentState.activePlayerId = (((activePlayer) % currentState.players.length)+1).toString()
+        }
+        else {
+            currentState.activePlayerId = (((activePlayer) % currentState.players.length)+1).toString()
+        }
         await GameStateController().update(currentState);
         res.send(currentState)
     }
