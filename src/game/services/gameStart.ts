@@ -9,16 +9,18 @@ import GameStateController from './gameState'
 import assignCountries from './assignCountries'
 import { UpdateError } from "../../common/types/errors";
 import { Country, Player } from "../../common/types";
+import Knex from 'knex';
+import {default as knexConfig} from '../../knexfile';
 
+const db = Knex(knexConfig[process.env.NODE_ENV || 'development']);
 
-
-async function gameStart(gameID: string) {
+async function gameStart(db:Knex.Knex<any, unknown[]>, gameID: string) {
     try {
-        let currentState: GameStateRecord = await GameStateController().get(gameID);
-        currentState.country = await GameStateController().getCountries(gameID);
+        let currentState: GameStateRecord = await GameStateController(db).get(gameID);
+        currentState.country = await GameStateController(db).getCountries(gameID);
         currentState.turn = 0
         currentState.activePlayerId = "1"
-        currentState.players = await GameStateController().getPlayers(gameID);
+        currentState.players = await GameStateController(db).getPlayers(gameID);
         // currentState.players = await GameStateController().getPlayers("42");//TODO: rework when players come from AI table.
             // await GameStateController().addPlayers(gameID, currentState.players)
         //country assignment
@@ -27,7 +29,7 @@ async function gameStart(gameID: string) {
         let countriesInsert: Country[] = []
         try {
             countries = await assignCountries(countries, currentState.players, gameID)
-            await GameStateController().updateCountryOwnership(gameID, countriesInsert);
+            await GameStateController(db).updateCountryOwnership(gameID, countriesInsert);
             }
             catch (err: any) {
                 throw new UpdateError({message: err.message})
@@ -42,7 +44,7 @@ async function gameStart(gameID: string) {
         
         }
         try{
-        await GameStateController().updatePlayers(gameID, currentState.players)
+        await GameStateController(db).updatePlayers(gameID, currentState.players)
     
         } catch (err: any) {
             throw new UpdateError({message: err.message})

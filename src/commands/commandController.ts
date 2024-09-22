@@ -8,32 +8,36 @@ import { Engagement } from '../common/types'
 import availableCommands from './services/availableCommands'
 import turnStart from '../game/services/startTurn'
 import { NoTroopError, AttackError } from '../common/types/errors'
+import Knex from 'knex';
+import {default as knexConfig} from '../knexfile'
 
 
+
+const db = Knex(knexConfig[process.env.NODE_ENV || 'development']); 
 
 function CommandController() {
     async function get(req: Request, res: Response) {
-        let currentState: GameStateRecord = await GameStateController().get(req.body.gameID);
+        let currentState: GameStateRecord = await GameStateController(db).get(req.body.gameID);
         const commands = availableCommands(currentState.phase, req.body.player, currentState.activePlayerId);
         //TODO validate the commands
         res.send(commands);
     }
 
     async function deployTroops(req: Request, res: Response) {
-        let currentState: GameStateRecord = await GameStateController().get(req.body.gameID); //TODO: rework to not read DB so often
+        let currentState: GameStateRecord = await GameStateController(db).get(req.body.gameID); //TODO: rework to not read DB so often
         const activePlayer: number = parseInt(currentState.activePlayerId);
         let targetCountry: number = req.body.targetCountry;
         currentState.country[targetCountry-1].armies += req.body.troopCount;
         currentState.players[activePlayer-1].armies -= req.body.troopCount;
-        await GameStateController().update(currentState);
-        await GameStateController().updatePlayers(req.body.gameID, currentState.players);
+        await GameStateController(db).update(currentState);
+        await GameStateController(db).updatePlayers(req.body.gameID, currentState.players);
         res.send(currentState)
 
     }
 
     async function attack(req: Request, res: Response) {
         //Read state and get the attacking country, defending country, and troop count
-        let currentState: GameStateRecord = await GameStateController().get(req.body.gameID);
+        let currentState: GameStateRecord = await GameStateController(db).get(req.body.gameID);
         const attackingCountryID: number = parseInt(req.body.attackingCountry);
         const defendingCountryID: number = parseInt(req.body.defendingCountry);
         const troopCount: number = req.body.troopCount;
@@ -62,8 +66,9 @@ function CommandController() {
         
         }
         catch (err:any){
-            if (err.name === 'NoTroopError') {
+            if (err.name === 'no troops available to defend'|| err.name === 'no troops available to attack') {
             req.log.info("no troops for country", {combatInput})
+            console.log(`err.name = ${err.name}`, {combatInput})
             } else {return err
         }}
         
@@ -73,7 +78,7 @@ function CommandController() {
         //Save the state, then update it
         currentState.country[attackingCountryID-1].armies -= combatResult.attackersLost;
         currentState.country[defendingCountryID-1].armies -= combatResult.defendersLost;
-        await GameStateController().update(currentState);
+        await GameStateController(db).update(currentState);
         res.send(combatResult);
 
         return combatResult;
@@ -93,7 +98,7 @@ function CommandController() {
     // }
 
     async function endTurn(req: Request, res: Response) {
-        let currentState: GameStateRecord = await GameStateController().get(req.body.gameID);
+        let currentState: GameStateRecord = await GameStateController(db).get(req.body.gameID);
         const activePlayer: number = parseInt(currentState.activePlayerId, 10);
         if (currentState.phase == 'deploy') {
             let armyCount:number = 0;
@@ -111,7 +116,7 @@ function CommandController() {
         else {
             currentState.activePlayerId = (((activePlayer) % currentState.players.length)+1).toString()
         }
-        await GameStateController().update(currentState);
+        await GameStateController(db).update(currentState);
         res.send(currentState)
     }
     return {
