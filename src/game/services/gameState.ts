@@ -46,7 +46,7 @@ function GameStateController() {
         let data1: GameStateRecord = {
             id: uid.rnd(),
             turn: 0,
-            phase: "start",
+            phase: "deploy",
             activePlayerId: "1",
         };
         try{
@@ -76,12 +76,11 @@ function GameStateController() {
             data = {
                 players: players,
                 country: countries,
-                phase: "start",
+                phase: null,
                 turn: 0,
                 activePlayerId: "", 
                 id: gameID
             }
-            data.phase = "start"
             await db.select(
                 "game.id",
                 "game.turn",
@@ -262,7 +261,7 @@ function GameStateController() {
             // let players: Player[] = currentState.players;
             let updated_players: Player[];
             console.log(`updating players with ${players}`)
-    
+            for (let i = 0; i<players.length; i++){
             try {
                 updated_players = await db
                     .select(
@@ -274,13 +273,14 @@ function GameStateController() {
                     )
                     .from(`${PLAYERS_TABLE} as player`)
                     .where("player.gameID", gameID)
+                    .where("player.id", players[i].id)
                     .orderBy("player.id", "asc")
                     .update({
                         gameID: gameID,
-                        name: players[0].name,
-                        color: players[0].color,
-                        armies: players[0].armies,
-                        id: players[0].id
+                        name: players[i].name,
+                        color: players[i].color,
+                        armies: players[i].armies,
+                        id: players[i].id
             })
 
                 console.log(`Returned from update function: ${updated_players}`); 
@@ -292,6 +292,7 @@ function GameStateController() {
                     message: `Error updating player table: ${err.message}`,
                 })
             }
+        }
             return 
         }
         //update ownership table
