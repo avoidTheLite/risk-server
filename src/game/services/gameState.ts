@@ -40,7 +40,6 @@ var example_globe:Globe = {
 };
 
 function GameStateController(db: Knex.Knex<any, unknown[]>) {
-    // const db = Knex(knexConfig[config.get('env')]);
 
     async function initialize(players?: Player[]): Promise<GameStateRecord> {
         let data1: GameStateRecord = {
