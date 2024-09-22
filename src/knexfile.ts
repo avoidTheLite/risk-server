@@ -40,7 +40,20 @@ const config: { [key: string]: Knex.Config } = {
       directory: './db/migrations',
     },
   },
-
+  test: {
+    client: 'sqlite3',
+    connection: {
+      filename: ':memory:'
+    },
+    useNullAsDefault: true,
+    migrations: {
+      tableName: 'knex_migrations',
+      directory: './src/db/migrations',
+    },
+    seeds: {
+      directory: './src/db/seeds',
+    },
+  },
   production: {
     client: 'postgresql',
     connection: defaultConnection,
