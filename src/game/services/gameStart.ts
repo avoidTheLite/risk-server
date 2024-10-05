@@ -28,7 +28,7 @@ async function gameStart(db:Knex.Knex<any, unknown[]>, gameID: string) {
         let countries = currentState.country
         let countriesInsert: Country[] = []
         try {
-            countries = await assignCountries(countries, currentState.players, gameID)
+            countriesInsert = await assignCountries(countries, currentState.players, gameID)
             await GameStateController(db).updateCountryOwnership(gameID, countriesInsert);
             }
             catch (err: any) {

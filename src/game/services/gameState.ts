@@ -50,7 +50,7 @@ function GameStateController(db: Knex.Knex<any, unknown[]>) {
         };
         try{
             await db("gameState").insert(data1);
-            let playersUpdate: Player[] = players;
+            let playersUpdate: Player[] = players || [];
             for (let i = 0; i < playersUpdate.length; i++) {
                 const playerUpdate: Player = playersUpdate[i];
                 playerUpdate.gameID = data1.id;
@@ -182,7 +182,6 @@ function GameStateController(db: Knex.Knex<any, unknown[]>) {
                             ownerId: countryUpdate.ownerId,
                         // gameID: gameID,
                     })
-                    console.log(dbfun)
                 } catch (err: any) {
                     console.log('there was an error here man')
                 }
