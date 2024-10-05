@@ -1,11 +1,8 @@
-import Knex from "knex";
-import {default as knexConfig} from "./knexfile";
-import config from "./config";
 import { beforeAll, beforeEach, afterAll } from "@jest/globals";
 import db from "./db/db";
 
 
-// const db = Knex(knexConfig.test);
+
 
 beforeAll(async () => {
     // Run migrations to set up the schema
