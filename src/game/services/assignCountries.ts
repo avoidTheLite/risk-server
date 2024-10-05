@@ -23,7 +23,6 @@ async function assignCountries(countries: Country[], players: Player[], gameID: 
         }
         countriesInsert[i].ownerID = ((i+players.length) % players.length + 1).toString();
         countriesInsert[i].armies = 1;
-        console.log(countriesInsert[i].id + countriesInsert[i].ownerID)
         
     }} catch (error) {console.debug(error)
     console.debug(countriesInsert)}

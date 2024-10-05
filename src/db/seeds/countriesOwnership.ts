@@ -9,7 +9,7 @@ export async function seed(knex: Knex): Promise<void> {
     var countries: Country[] = countrySeed();
     var ownershipTable: CountryOwnershipRecord[];
     try{
-    for (let i=1; i<countries.length; i++) {{
+    for (let i=1; i<=countries.length; i++) {{
       let row = {
         countryId: i.toString(),
         ownerId: countries[i-1].ownerID      }

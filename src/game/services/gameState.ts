@@ -50,7 +50,7 @@ function GameStateController(db: Knex.Knex<any, unknown[]>) {
         };
         try{
             await db("gameState").insert(data1);
-            let playersUpdate: Player[] = players;
+            let playersUpdate: Player[] = players || [];
             for (let i = 0; i < playersUpdate.length; i++) {
                 const playerUpdate: Player = playersUpdate[i];
                 playerUpdate.gameID = data1.id;
@@ -146,9 +146,11 @@ function GameStateController(db: Knex.Knex<any, unknown[]>) {
             "country.continent",
             "country.armies",
             "country.created_at",
-            "country.updated_at")
+            "country.updated_at",
+            "ownership.ownerId"
+        )
             .from(`${COUNTRIES_BASE_TABLE} as country`)
-            // .join(`${OWNERSHIP_TABLE} as ownership`, {"ownership.countryId": "country.id"})
+            .join(`${OWNERSHIP_TABLE} as ownership`, {"ownership.countryId": "country.id"})
             // .where("gameID", gameID) TODO: add gameID to countriesBase
             .orderBy("country.id", "asc")
             .then((result) => {
@@ -159,7 +161,8 @@ function GameStateController(db: Knex.Knex<any, unknown[]>) {
                         continent: row.continent,
                         armies: row.armies,
                         created_at: row.created_at,
-                        updated_at: row.updated_at
+                        updated_at: row.updated_at,
+                        ownerId: row.ownerId
                     }
                 })
             })
@@ -182,7 +185,6 @@ function GameStateController(db: Knex.Knex<any, unknown[]>) {
                             ownerId: countryUpdate.ownerId,
                         // gameID: gameID,
                     })
-                    console.log(dbfun)
                 } catch (err: any) {
                     console.log('there was an error here man')
                 }
