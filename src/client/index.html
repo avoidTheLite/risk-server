@@ -14,10 +14,10 @@
     <h2> </h2>
 
     <p>
+      <div id="game-id-display">Game ID = </div>
       <div id="active-player">Active Player = </div>
       <div id="turn-number">Turn = </div>
       <div id="reinforcement-count">Your Reinforcement Count = </div>
-      <div id="countries">Countries: </div>
     </p>
     <p> 
         <div> 
@@ -27,6 +27,78 @@
             <button id="move-button">Move</button>
             <button id="turn-button">End Turn</button>
         </div> 
+    </p>
+    <p>
+       <div id="countries">Countries: </div>
+    </p>  
+    <p>
+      <div> 
+        <button id="newGameButton">New Game</button>
+      </div>  
+      <div id="playerModal" class="modal">
+        <div class="modal-content">
+        
+          <div> 
+            <button id="twoPlayers">2 players</button>
+            <button id="threePlayers">3 players</button>
+            <button id="fourPlayers">4 players</button>
+          </div>
+
+          <h2>Enter Player Details</h2>
+          <div>
+          <label for="player1Name">Player 1 Name:</label>
+          <input type="text" id="player1Name" placeholder="Enter your name">
+          <label for="player1Color">Choose Color:</label>
+          <select id="player1Color">
+            <option value="Black">Black</option>
+            <option value="MidnightBlue">MidnightBlue</option>
+            <option value="FireBrick">FireBrick</option>
+            <option value="DarkGoldenRod">DarkGoldenRod</option>
+          </select>
+          </div>
+
+          <div>
+          <label for="player2Name">Player 2 Name:</label>
+          <input type="text" id="player2Name" placeholder="Enter your name">
+          <label for="player2Color">Choose Color:</label>
+          <select id="player2Color">
+            <option value="MidnightBlue">MidnightBlue</option>
+            <option value="FireBrick">FireBrick</option>
+            <option value="DarkGoldenRod">DarkGoldenRod</option>
+            <option value="Black">Black</option>
+          </select>
+          </div>
+
+          <div>
+          <label for="player3Name">Player 3 Name:</label>
+          <input type="text" id="player3Name" placeholder="Enter your name">
+          <label for="player3Color">Choose Color:</label>
+          <select id="player3Color">
+            <option value="FireBrick">FireBrick</option>
+            <option value="DarkGoldenRod">DarkGoldenRod</option>
+            <option value="Black">Black</option>
+            <option value="MidnightBlue">MidnightBlue</option>
+          </select>
+        </div>
+
+        <div>
+        <label for="player4Name">Player 3 Name:</label>
+        <input type="text" id="player4Name" placeholder="Enter your name">
+        <label for="player4Color">Choose Color:</label>
+        <select id="player4Color">
+          <option value="DarkGoldenRod">DarkGoldenRod</option>
+          <option value="Black">Black</option>
+          <option value="MidnightBlue">MidnightBlue</option>
+          <option value="FireBrick">FireBrick</option>
+        </select>
+
+          </div>
+          <div class="modal-actions">
+            <button id="startGameButton">Start Game</button>
+            <button id="cancelButton">Cancel</button>
+          </div>
+        </div>
+      </div>
     </p>
     <embed type="image/jpg" src="pic365731.webp">
 
