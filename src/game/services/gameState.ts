@@ -162,7 +162,7 @@ function GameStateController(db: Knex.Knex<any, unknown[]>) {
                         armies: row.armies,
                         created_at: row.created_at,
                         updated_at: row.updated_at,
-                        ownerId: row.ownerId
+                        ownerID: row.ownerId
                     }
                 })
             })
@@ -173,16 +173,16 @@ function GameStateController(db: Knex.Knex<any, unknown[]>) {
         for (let i = 1; i <= countries.length; i++) {
             let countryUpdate: CountryOwnershipRecord = {
                 countryId: countries[i-1].id.toString(),
-                ownerId: countries[i-1].ownerID,
+                ownerID: countries[i-1].ownerID,
             }
             // countryUpdate.gameID = gameID;
-            if (countryUpdate.ownerId !== undefined) {
+            if (countryUpdate.ownerID !== undefined) {
                 try {
                     let dbfun = await db("ownership")
                         // .from(`${OWNERSHIP_TABLE} as o`)
                         .where({countryId:countryUpdate.countryId})
                         .update({
-                            ownerId: countryUpdate.ownerId,
+                            ownerId: countryUpdate.ownerID,
                         // gameID: gameID,
                     })
                 } catch (err: any) {
