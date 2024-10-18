@@ -24,13 +24,13 @@ function CommandController() {
     }
 
     async function deployTroops(req: Request, res: Response) {
-        let currentState: GameStateRecord = await GameStateController(db).get(req.body.gameID); //TODO: rework to not read DB so often
+        let currentState: GameStateRecord = await GameStateController(db).get(req.params.id); //TODO: rework to not read DB so often
         const activePlayer: number = parseInt(currentState.activePlayerId);
         let targetCountry: number = req.body.targetCountry;
         currentState.country[targetCountry-1].armies += req.body.troopCount;
         currentState.players[activePlayer-1].armies -= req.body.troopCount;
         await GameStateController(db).update(currentState);
-        await GameStateController(db).updatePlayers(req.body.gameID, currentState.players);
+        await GameStateController(db).updatePlayers(req.params.id, currentState.players);
         res.send(currentState)
 
     }
