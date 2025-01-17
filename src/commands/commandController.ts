@@ -10,14 +10,15 @@ import turnStart from '../game/services/startTurn'
 import { NoTroopError, AttackError } from '../common/types/errors'
 import Knex from 'knex';
 import {default as knexConfig} from '../knexfile'
+import db from '../db/db';
 
 
 
-const db = Knex(knexConfig[process.env.NODE_ENV || 'development']); 
+// const db = Knex(knexConfig[process.env.NODE_ENV || 'development']); 
 
 function CommandController() {
     async function get(req: Request, res: Response) {
-        let currentState: GameStateRecord = await GameStateController(db).get(req.body.gameID);
+        let currentState: GameStateRecord = await GameStateController(db).get(req.params.id);
         const commands = availableCommands(currentState.phase, req.body.player, currentState.activePlayerId);
         //TODO validate the commands
         res.send(commands);
@@ -37,7 +38,7 @@ function CommandController() {
 
     async function attack(req: Request, res: Response) {
         //Read state and get the attacking country, defending country, and troop count
-        let currentState: GameStateRecord = await GameStateController(db).get(req.body.gameID);
+        let currentState: GameStateRecord = await GameStateController(db).get(req.params.id);
         const attackingCountryID: number = parseInt(req.body.attackingCountry);
         const defendingCountryID: number = parseInt(req.body.defendingCountry);
         const troopCount: number = req.body.troopCount;
@@ -98,7 +99,7 @@ function CommandController() {
     // }
 
     async function endTurn(req: Request, res: Response) {
-        let currentState: GameStateRecord = await GameStateController(db).get(req.body.gameID);
+        let currentState: GameStateRecord = await GameStateController(db).get(req.params.id);
         const activePlayer: number = parseInt(currentState.activePlayerId, 10);
         if (currentState.phase == 'deploy') {
             let armyCount:number = 0;
