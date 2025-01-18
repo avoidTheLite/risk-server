@@ -1,5 +1,5 @@
 import http, { Server } from 'http';
-import app from './app'; -
+import app from './app';
 import config from './config';
 import turnStart from './game/services/startTurn';
 import WebSocket, {WebSocketServer} from 'ws';
