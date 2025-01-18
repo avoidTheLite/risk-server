@@ -10,34 +10,35 @@ import turnStart from '../game/services/startTurn'
 import { NoTroopError, AttackError } from '../common/types/errors'
 import Knex from 'knex';
 import {default as knexConfig} from '../knexfile'
+import db from '../db/db';
 
 
 
-const db = Knex(knexConfig[process.env.NODE_ENV || 'development']); 
+// const db = Knex(knexConfig[process.env.NODE_ENV || 'development']); 
 
 function CommandController() {
     async function get(req: Request, res: Response) {
-        let currentState: GameStateRecord = await GameStateController(db).get(req.body.gameID);
+        let currentState: GameStateRecord = await GameStateController(db).get(req.params.id);
         const commands = availableCommands(currentState.phase, req.body.player, currentState.activePlayerId);
         //TODO validate the commands
         res.send(commands);
     }
 
     async function deployTroops(req: Request, res: Response) {
-        let currentState: GameStateRecord = await GameStateController(db).get(req.body.gameID); //TODO: rework to not read DB so often
+        let currentState: GameStateRecord = await GameStateController(db).get(req.params.id); //TODO: rework to not read DB so often
         const activePlayer: number = parseInt(currentState.activePlayerId);
         let targetCountry: number = req.body.targetCountry;
         currentState.country[targetCountry-1].armies += req.body.troopCount;
         currentState.players[activePlayer-1].armies -= req.body.troopCount;
         await GameStateController(db).update(currentState);
-        await GameStateController(db).updatePlayers(req.body.gameID, currentState.players);
+        await GameStateController(db).updatePlayers(req.params.id, currentState.players);
         res.send(currentState)
 
     }
 
     async function attack(req: Request, res: Response) {
         //Read state and get the attacking country, defending country, and troop count
-        let currentState: GameStateRecord = await GameStateController(db).get(req.body.gameID);
+        let currentState: GameStateRecord = await GameStateController(db).get(req.params.id);
         const attackingCountryID: number = parseInt(req.body.attackingCountry);
         const defendingCountryID: number = parseInt(req.body.defendingCountry);
         const troopCount: number = req.body.troopCount;
@@ -98,7 +99,7 @@ function CommandController() {
     // }
 
     async function endTurn(req: Request, res: Response) {
-        let currentState: GameStateRecord = await GameStateController(db).get(req.body.gameID);
+        let currentState: GameStateRecord = await GameStateController(db).get(req.params.id);
         const activePlayer: number = parseInt(currentState.activePlayerId, 10);
         if (currentState.phase == 'deploy') {
             let armyCount:number = 0;

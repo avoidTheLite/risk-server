@@ -41,7 +41,7 @@ fetch(apiUrl)
         countryElement.textContent = countryInfo;
         countryElement.classList.add('country-box')
         countryElement.classList.add('text')
-        let owner = data.players.find(player => player.id === country.ownerId);
+        let owner = data.players.find(player => player.id === country.ownerID);
         if (owner) {
           countryElement.style.backgroundColor = owner.color; // Use the owner's color
         }
@@ -132,7 +132,8 @@ fourPlayers.addEventListener("click", () => {
   playerCount = 4
 })
 
-startGameButton.addEventListener("click", () => {
+startGameButton.addEventListener("click", async () => {
+  console.log("Start Game button clicked!");
   let players = [];
   for (let i = 1; i <= playerCount; i++) {
     console.log(`player${i}Name and playerCount = ${playerCount}`);
@@ -141,17 +142,20 @@ startGameButton.addEventListener("click", () => {
       name: document.getElementById(`player${i}Name`).value,
       color: document.getElementById(`player${i}Color`).value
     });
+    console.log(`players = ${players}`);
+    if (i === playerCount) {
+      await startGameFlow(players)
+      modal.style.display = "none"
   }
-  console.log(`players = ${players}`);
-  startGameFlow(players);
-  modal.style.display = "none";
+  }
 })
+
 
 cancelButton.addEventListener("click", () => {
   modal.style.display = "none";
 })
 
-function startGameFlow(players)
+async function startGameFlow(players)
 {
 
     

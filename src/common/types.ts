@@ -36,7 +36,7 @@ export interface CountryRecord {
 
 export interface CountryOwnershipRecord {
     countryId: string;
-    ownerId: string;
+    ownerID: string;
 }
 
 export interface Continent {

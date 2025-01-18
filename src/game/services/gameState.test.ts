@@ -1,7 +1,7 @@
 import db from  "../../db/db"
 import GameStateController from "./gameState"
 import { describe, it, expect, beforeAll } from '@jest/globals';
-import { Country } from "../../common/types";
+import { Country, CountryOwnershipRecord } from "../../common/types";
 
 
 
@@ -41,5 +41,16 @@ describe('GameService Integration Tests', () => {
       const gameID = "anyIDWillWork"
       const data: Country[] = await GameStateController(db).getCountries(gameID);
       expect(data.length).toEqual(42);
+    })
+
+    it('should update countries data and ownership data', async() => {
+      const gameID = "42"
+      let countries: Country[] = await GameStateController(db).getCountries(gameID);
+      countries[0].ownerID = "42";
+
+      await GameStateController(db).updateCountryOwnership(gameID, countries);
+
+      countries = await GameStateController(db).getCountries(gameID);
+      expect(countries[0].ownerID).toEqual("42");
     })
   });
