@@ -1,25 +1,31 @@
-import http, { Server } from 'http';
+import http from 'http';
 import app from './app';
 import config from './config';
-import turnStart from './game/services/startTurn';
-import WebSocket, {WebSocketServer} from 'ws';
-import wss from './common/services/webSocket';
+import createWebSocketServer from './common/services/webSocket';
 
-const PORT = config.get('serverPort');
-const wsPORT = config.get('socketPort');
-const wsServer = http.createServer(app);
-const wss = new WebSocketServer({ server: wsServer });
+// Construct the same listeners for startup and integration tests without opening ports on import.
+export function createServers() {
+  const server = http.createServer(app);
+  const wsServer = http.createServer(app);
+  const wss = createWebSocketServer(wsServer);
+  return { server, wsServer, wss };
+}
 
+export function startServers() {
+  const listeners = createServers();
+  const port = Number(config.get('serverPort'));
+  const socketPort = Number(config.get('socketPort'));
 
-
-app.listen(PORT, () => {
+  listeners.server.listen(port, () => {
     console.log('Log level', config.get('logLevel'));
-    console.log(
-      `Application listening on ${PORT} in environment ${config.get('env')}`
-    );
+    console.log(`Application listening on ${port} in environment ${config.get('env')}`);
   });
+  listeners.wsServer.listen(socketPort, '127.0.0.1', () => {
+    console.log(`Socket server started on port ${socketPort}`);
+  });
+  return listeners;
+}
 
-wsServer.listen(wsPORT, '127.0.0.1', () => {
-  console.log(`Socket server started on port ${wsPORT}`);
-
-});
+if (require.main === module) {
+  startServers();
+}
