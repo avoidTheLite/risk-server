@@ -13,6 +13,10 @@ const config = appConfig({
     default: 3001,
     env: 'PORT',
   },
+  socketPort: {
+    default: 8080,
+    env: 'SOCKET_PORT',
+  },
   logLevel: {
     default: 'debug',
     env: 'LOG_LEVEL',
